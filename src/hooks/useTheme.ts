@@ -25,7 +25,11 @@ export function useTheme() {
         common: {},
       }
     }
-    return {}
+    return {
+      common: {
+        primaryColor: '#426eff',
+      },
+    }
   })
 
   watch(

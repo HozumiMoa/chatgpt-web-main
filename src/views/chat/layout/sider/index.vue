@@ -1,7 +1,7 @@
 <script setup lang='ts'>
 import type { CSSProperties } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
-import { NButton, NLayoutSider, NModal } from 'naive-ui'
+import { NButton, NLayoutSider, NModal, NSelect } from 'naive-ui'
 import List from './List.vue'
 import Footer from './Footer.vue'
 import { useAppStore, useAuthStore, useChatStore } from '@/store'
@@ -18,6 +18,8 @@ const chatStore = useChatStore()
 
 const { isMobile } = useBasicLayout()
 const show = ref(false)
+
+const major = ref(null)
 
 const collapsed = computed(() => appStore.siderCollapsed)
 
@@ -38,7 +40,9 @@ const getMobileClass = computed<CSSProperties>(() => {
       zIndex: 50,
     }
   }
-  return {}
+  return {
+    backgroundColor: 'white',
+  }
 })
 
 const mobileSafeArea = computed(() => {
@@ -118,9 +122,19 @@ onMounted(async () => {
   >
     <div class="flex flex-col h-full" :style="mobileSafeArea">
       <main class="flex flex-col flex-1 min-h-0">
-        <div class="p-4">
-          <NButton dashed block :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled" @click="handleAdd">
-            {{ $t('chat.newChatButton') }}
+        <div class="p-4 flex flex-col gap-4">
+          <div class="flex items-center">
+            <span class="min-w-max">专业：</span>
+            <NSelect
+              v-model:value="major" :options="[{
+                label: '监理',
+                value: '监理',
+              }]"
+            />
+          </div>
+          <NButton block strong secondary type="primary" :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled" @click="handleAdd">
+            <!-- {{ $t('chat.newChatButton') }} -->
+            新建聊天
           </NButton>
         </div>
         <div class="flex-1 min-h-0 pb-4 overflow-hidden">
@@ -128,12 +142,13 @@ onMounted(async () => {
         </div>
         <div class="p-4">
           <NButton block @click="show = true">
-            {{ $t('store.siderButton') }}
+            <!-- {{ $t('store.siderButton') }} -->
+            打开模态框
           </NButton>
         </div>
       </main>
-      <Footer />
-      <GithubSite class="flex-col-2 text-center m-0" />
+      <!-- <Footer />
+      <GithubSite class="flex-col-2 text-center m-0" /> -->
     </div>
   </NLayoutSider>
   <template v-if="isMobile">

@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import type { Ref } from 'vue'
-import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MessageReactive, UploadFileInfo } from 'naive-ui'
@@ -50,7 +50,8 @@ const conversationList = computed(() => dataSources.value.filter(item => (!item.
 const prompt = ref<string>('')
 const firstLoading = ref<boolean>(false)
 const loading = ref<boolean>(false)
-const inputRef = ref<Ref | null>(null)
+// const inputRef = ref<Ref | null>(null)
+const inputRef = useTemplateRef('inputRef')
 const showPrompt = ref(false)
 const nowSelectChatModel = ref<string | null>(null)
 const currentChatModel = computed(() => nowSelectChatModel.value ?? currentChatHistory.value?.chatModel ?? userStore.userInfo.config.chatModel)
@@ -84,6 +85,7 @@ const uploadFileKeysRef = ref<string[]>([])
 
 async function onConversation() {
   let message = prompt.value
+  // console.log('message==>', message)
 
   if (loading.value)
     return
@@ -656,6 +658,7 @@ onUnmounted(() => {
 
 <template>
   <div class="flex flex-col w-full h-full">
+    <!-- 仅手机端显示 -->
     <HeaderComponent
       v-if="isMobile"
       :using-context="usingContext"
@@ -663,6 +666,7 @@ onUnmounted(() => {
       @export="handleExport" @toggle-using-context="handleToggleUsingContext"
       @toggle-show-prompt="showPrompt = true"
     />
+
     <main class="flex-1 overflow-hidden">
       <div id="scrollRef" ref="scrollRef" class="h-full overflow-hidden overflow-y-auto" @scroll="handleScroll">
         <div
@@ -750,30 +754,29 @@ onUnmounted(() => {
                 <SvgIcon icon="ri:delete-bin-line" />
               </span>
             </HoverButton>
-            <HoverButton v-if="!isMobile" @click="handleExport">
+            <!-- <HoverButton v-if="!isMobile" @click="handleExport">
               <span class="text-xl text-[#4f555e] dark:text-white">
                 <SvgIcon icon="ri:download-2-line" />
               </span>
-            </HoverButton>
-            <HoverButton v-if="!isMobile" @click="showPrompt = true">
+            </HoverButton> -->
+            <!-- <HoverButton v-if="!isMobile" @click="showPrompt = true">
               <span class="text-xl text-[#4f555e] dark:text-white">
                 <IconPrompt class="w-[20px] m-auto" />
               </span>
-            </HoverButton>
-            <HoverButton v-if="!isMobile" :tooltip="usingContext ? $t('chat.clickTurnOffContext') : $t('chat.clickTurnOnContext')" :class="{ 'text-[#4b9e5f]': usingContext, 'text-[#a8071a]': !usingContext }" @click="handleToggleUsingContext">
+            </HoverButton> -->
+            <!-- <HoverButton v-if="!isMobile" :tooltip="usingContext ? $t('chat.clickTurnOffContext') : $t('chat.clickTurnOnContext')" :class="{ 'text-[#426eff]': usingContext, 'text-[#a8071a]': !usingContext }" @click="handleToggleUsingContext">
               <span class="text-xl">
                 <SvgIcon icon="ri:chat-history-line" />
               </span>
-              <!-- <span style="margin-left:.25em">{{ usingContext ? '包含上下文' : '不含上下文' }}</span> -->
-            </HoverButton>
-            <NSelect
+            </HoverButton> -->
+            <!-- <NSelect
               style="width: 250px"
               :value="currentChatModel"
               :options="authStore.session?.chatModels"
               :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled"
               @update-value="(val) => handleSyncChatModel(val)"
-            />
-            <NSlider v-model:value="userStore.userInfo.advanced.maxContextCount" :max="100" :min="0" :step="1" style="width: 88px" :format-tooltip="formatTooltip" @update:value="() => { userStore.updateSetting(false) }" />
+            /> -->
+            <!-- <NSlider v-model:value="userStore.userInfo.advanced.maxContextCount" :max="100" :min="0" :step="1" style="width: 88px" :format-tooltip="formatTooltip" @update:value="() => { userStore.updateSetting(false) }" /> -->
           </div>
           <div class="flex items-center justify-between space-x-2">
             <NAutoComplete v-model:value="prompt" :options="searchOptions" :render-label="renderOption">
@@ -782,7 +785,9 @@ onUnmounted(() => {
                   ref="inputRef"
                   v-model:value="prompt"
                   :disabled="!!authStore.session?.auth && !authStore.token && !authStore.session?.authProxyEnabled"
-                  type="textarea"
+                  size="large"
+                  round
+                  class="w-full"
                   :placeholder="placeholder"
                   :autosize="{ minRows: isMobile ? 1 : 4, maxRows: isMobile ? 4 : 8 }"
                   @input="handleInput"
@@ -792,7 +797,7 @@ onUnmounted(() => {
                 />
               </template>
             </NAutoComplete>
-            <NButton type="primary" :disabled="buttonDisabled" @click="handleSubmit">
+            <NButton circle size="large" type="primary" :disabled="buttonDisabled" @click="handleSubmit">
               <template #icon>
                 <span class="dark:text-black">
                   <SvgIcon icon="ri:send-plane-fill" />

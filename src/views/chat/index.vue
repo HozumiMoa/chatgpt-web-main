@@ -1,10 +1,10 @@
 <script setup lang='ts'>
-import type { Ref } from 'vue'
+// import type { Ref } from 'vue'
 import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import type { MessageReactive, UploadFileInfo } from 'naive-ui'
-import { NAutoComplete, NButton, NInput, NSelect, NSlider, NSpace, NSpin, NUpload, useDialog, useMessage } from 'naive-ui'
+import { NAutoComplete, NButton, NInput, NSpace, NSpin, NUpload, useDialog, useMessage } from 'naive-ui'
 import html2canvas from 'html2canvas'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
@@ -20,7 +20,8 @@ import {
 } from '@/api'
 import { t } from '@/locales'
 import { debounce } from '@/utils/functions/debounce'
-import IconPrompt from '@/icons/Prompt.vue'
+
+// import IconPrompt from '@/icons/Prompt.vue'
 
 const Prompt = defineAsyncComponent(() => import('@/components/common/Setting/Prompt.vue'))
 
@@ -607,14 +608,14 @@ const footerClass = computed(() => {
   return classes
 })
 
-async function handleSyncChatModel(chatModel: string) {
-  nowSelectChatModel.value = chatModel
-  await chatStore.setChatModel(chatModel, +uuid)
-}
+// async function handleSyncChatModel(chatModel: string) {
+//   nowSelectChatModel.value = chatModel
+//   await chatStore.setChatModel(chatModel, +uuid)
+// }
 
-function formatTooltip(value: number) {
-  return `${t('setting.maxContextCount')}: ${value}`
-}
+// function formatTooltip(value: number) {
+//   return `${t('setting.maxContextCount')}: ${value}`
+// }
 
 // https://github.com/tusen-ai/naive-ui/issues/4887
 function handleFinish(options: { file: UploadFileInfo; event?: ProgressEvent }) {

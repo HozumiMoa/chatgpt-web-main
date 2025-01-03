@@ -191,6 +191,22 @@ export const useChatStore = defineStore('chat-store', {
       return null
     },
 
+    /**
+     * ### 向指定聊天室添加消息
+     * 1. 新建聊天室的情况 (`uuid` 为 0 或不存在时):
+        - 如果历史记录为空，会创建一个新的聊天室：
+          - 使用当前时间戳作为新的 `uuid`
+          - 调用 `fetchCreateChatRoom` 创建聊天室
+          - 将新聊天添加到历史记录和聊天数据中
+          - 设置该聊天室为当前活动的聊天室
+        - 如果已有历史记录，则：
+          - 将新消息添加到第一个聊天室
+          - 如果当前标题是 "New Chat"，则用新消息内容更新标题
+      2. 已存在聊天室的情况 (提供了有效的 `uuid`):
+        - 查找对应 `uuid` 的聊天室
+        - 将新消息添加到该聊天室
+        - 如果该聊天室的标题是 "New Chat"，则更新标题
+     */
     addChatByUuid(uuid: number, chat: Chat.Chat) {
       if (!uuid || uuid === 0) {
         if (this.history.length === 0) {
@@ -222,6 +238,17 @@ export const useChatStore = defineStore('chat-store', {
       }
     },
 
+    /**
+     * ### 更新聊天记录
+     * 1. 当 `uuid` 为 0 或不存在时的处理：
+          - 检查是否存在聊天记录（`this.chat.length`）
+          - 如果存在，将保持原有的 uuid，并用新的聊天消息更新第一组聊天记录中指定索引位置的内容
+          - 更新完成后调用 `recordState()` 保存状态
+       2. 当 `uuid` 存在时的处理：
+          - 使用 `findIndex` 查找对应 `uuid` 的聊天组
+          - 如果找到匹配的聊天组（`chatIndex` !== -1），保持原有的 uuid，并更新该组中指定索引位置的聊天消息
+          - 同样在更新后调用 `recordState()` 保存状态
+     */
     updateChatByUuid(uuid: number, index: number, chat: Chat.Chat) {
       if (!uuid || uuid === 0) {
         if (this.chat.length) {

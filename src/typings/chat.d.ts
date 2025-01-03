@@ -30,9 +30,16 @@ declare namespace Chat {
   }
 
   interface ChatState {
+    /** 当前激活的聊天室 */
     active: number | null
+
+    /** 是否使用上下文 */
     usingContext: boolean
+
+    /** 聊天室历史记录 */
     history: History[]
+
+    /** 聊天室数据 */
     chat: { uuid: number; data: Chat[] }[]
   }
 

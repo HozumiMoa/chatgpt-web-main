@@ -1,7 +1,8 @@
 import type { AxiosProgressEvent, GenericAbortSignal } from 'axios'
 import { get, post } from '@/utils/request'
 import type { AnnounceConfig, AuditConfig, ConfigState, GiftCard, KeyConfig, MailConfig, SiteConfig, Status, UserInfo, UserPassword, UserPrompt } from '@/components/common/Setting/model'
-import { useAuthStore, useUserStore } from '@/store'
+
+// import { useAuthStore, useUserStore } from '@/store'
 import type { SettingsState } from '@/store/modules/user/helper'
 
 export function fetchAnnouncement<T = any>() {
@@ -27,29 +28,36 @@ export function fetchChatAPIProcess<T = any>(
     signal?: GenericAbortSignal
     onDownloadProgress?: (progressEvent: AxiosProgressEvent) => void },
 ) {
-  const userStore = useUserStore()
-  const authStore = useAuthStore()
+  // const userStore = useUserStore()
+  // const authStore = useAuthStore()
 
-  let data: Record<string, any> = {
+  const data: Record<string, any> = {
     roomId: params.roomId,
     uuid: params.uuid,
     regenerate: params.regenerate || false,
     prompt: params.prompt,
     uploadFileKeys: params.uploadFileKeys,
     options: params.options,
+
+    // 实际使用参数
+    path_id: 3,
+    user_id: 10050,
+    csid: 123456,
+    query: '最小曲线半径应什么公式计算<nw_query_domain>jianli_250102',
   }
 
-  if (authStore.isChatGPTAPI) {
-    data = {
-      ...data,
-      systemMessage: userStore.userInfo.advanced.systemMessage,
-      temperature: userStore.userInfo.advanced.temperature,
-      top_p: userStore.userInfo.advanced.top_p,
-    }
-  }
+  // if (authStore.isChatGPTAPI) {
+  //   data = {
+  //     ...data,
+  //     systemMessage: userStore.userInfo.advanced.systemMessage,
+  //     temperature: userStore.userInfo.advanced.temperature,
+  //     top_p: userStore.userInfo.advanced.top_p,
+  //   }
+  // }
 
   return post<T>({
-    url: '/chat-process',
+    // url: '/chat-process',
+    url: '/customer_service',
     data,
     signal: params.signal,
     onDownloadProgress: params.onDownloadProgress,

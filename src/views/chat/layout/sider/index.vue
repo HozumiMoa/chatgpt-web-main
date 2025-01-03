@@ -3,10 +3,11 @@ import type { CSSProperties } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import { NButton, NLayoutSider, NModal, NSelect } from 'naive-ui'
 import List from './List.vue'
-import Footer from './Footer.vue'
+
+// import Footer from './Footer.vue'
 import { useAppStore, useAuthStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { GithubSite, PromptStore, Watermark } from '@/components/common'
+import { Watermark } from '@/components/common'
 import { fetchAnnouncement } from '@/api'
 import type { AnnounceConfig } from '@/components/common/Setting/model'
 
@@ -154,7 +155,7 @@ onMounted(async () => {
   <template v-if="isMobile">
     <div v-show="!collapsed" class="fixed inset-0 z-40 bg-black/40" @click="handleUpdateCollapsed" />
   </template>
-  <PromptStore v-model:visible="show" />
+  <!-- <PromptStore v-model:visible="show" /> -->
   <NModal v-model:show="showNotice" :auto-focus="false" preset="card" :style="{ width: !isMobile ? '33%' : '90%' }">
     <div class="p-4 space-y-5 min-h-[200px]">
       <div class="w-full markdown-body" v-html="notice_text" />
